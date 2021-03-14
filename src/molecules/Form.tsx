@@ -1,5 +1,11 @@
 import React, { useRef } from 'react';
 
+const countryList = [
+  { country: 'Poland', shortcut: 'POL' },
+  { country: 'Germany', shortcut: 'DEU' },
+  { country: 'France', shortcut: 'FRA' },
+];
+
 const Form = ({ setDate }: any) => {
   const dateRef = useRef<HTMLInputElement>(null);
   const countryRef = useRef<HTMLSelectElement>(null);
@@ -12,9 +18,10 @@ const Form = ({ setDate }: any) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(countryRef.current?.value);
-    console.log(dateRef.current?.value);
-    console.log(today.getMonth());
+    setDate({
+      country: countryRef.current?.value,
+      date: dateRef.current?.value,
+    });
   };
 
   return (
@@ -26,17 +33,22 @@ const Form = ({ setDate }: any) => {
           type="month"
           name="date"
           id="date"
-          value={`${today.getFullYear()}-${month}`}
+          defaultValue={`${today.getFullYear()}-${month}`}
+          // value={`${today.getFullYear()}-${month}`}
         />
       </label>
       <label htmlFor="country">
         Choose country:
         <select ref={countryRef} name="country" id="country">
-          <option value="PL" selected>
-            Poland
-          </option>
-          <option value="DE">Germany</option>
-          <option value="FR">France</option>
+          {countryList.map(({ shortcut, country }) => (
+            <option
+              key={country}
+              value={shortcut}
+              selected={country === 'Poland'}
+            >
+              {country}
+            </option>
+          ))}
         </select>
       </label>
       <button type="submit">Submit</button>
