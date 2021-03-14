@@ -17,24 +17,28 @@ const covidApi = (date: { country: string; date: string }) => {
   const nextMonth = `${monthUnderTen === '13' ? '01' : monthUnderTen}`;
   return `https://covidapi.info/api/v1/country/${country}/timeseries/${year}-${month}-01/${nextYear}-${nextMonth}-01`;
 };
-const fetchData = async (endpoint: string) => {
-  const result = await fetch(endpoint).then((response) => {
-    return response.json();
-  });
-  console.log(result);
-  return result;
-};
 
-interface chartDataInterface {
+type chartDataInterface = {
   confirmed: number;
   date: string;
   deaths: number;
   recovered: number;
-}
+};
+const fetchData = async (
+  endpoint: string
+): Promise<{ result: chartDataInterface[] }> => {
+  const result = await fetch(endpoint).then((response) => {
+    return response.json();
+  });
+  return result;
+};
 const Chart: React.FunctionComponent<any> = ({ date }) => {
   const [chartDate, setChartDate] = React.useState<chartDataInterface[]>();
   useEffect(() => {
-    console.log(fetchData(covidApi(date)));
+    (async () => {
+      const dane = await fetchData(covidApi(date));
+      setChartDate(dane.result);
+    })();
   }, [date]);
   return (
     <>
