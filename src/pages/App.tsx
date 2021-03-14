@@ -9,7 +9,6 @@ const App: React.FC = () => {
     country: '',
     date: '',
   });
-  console.log(date);
 
   return (
     <>

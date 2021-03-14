@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import LinearChart from './LineChart';
 
 const covidApi = (date: { country: string; date: string }) => {
   const { country } = date;
@@ -19,17 +21,27 @@ const fetchData = async (endpoint: string) => {
   const result = await fetch(endpoint).then((response) => {
     return response.json();
   });
+  console.log(result);
   return result;
 };
-function Chart({ date }: any) {
+
+interface chartDataInterface {
+  confirmed: number;
+  date: string;
+  deaths: number;
+  recovered: number;
+}
+const Chart: React.FunctionComponent<any> = ({ date }) => {
+  const [chartDate, setChartDate] = React.useState<chartDataInterface[]>();
   useEffect(() => {
-    fetchData(covidApi(date));
+    console.log(fetchData(covidApi(date)));
   }, [date]);
   return (
     <>
       <p>{date.country}</p>
+      <LinearChart chartDate={chartDate} />
     </>
   );
-}
+};
 
 export default Chart;
